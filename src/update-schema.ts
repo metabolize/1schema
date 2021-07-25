@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
-import path from 'path'
 import stringify from 'json-stable-stringify'
+import path from 'path'
 import prettier from 'prettier'
 import { createGenerator, Schema } from 'ts-json-schema-generator'
 
