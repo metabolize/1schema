@@ -19,7 +19,7 @@ describe('updateSchema()', () => {
   )
 
   it('creates the expected JSON Schema file', async function () {
-    this.timeout('3s')
+    this.timeout('5s') // Loading prettier is pretty slow.
 
     const { generatedJsonSchemaRelativePath } = await updateSchema({
       basedir: dir.path,
