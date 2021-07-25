@@ -146,10 +146,6 @@ export class Runner {
       console.log(chalk.blue('All schemas up to date'))
     }
 
-    return {
-      isValid: missing.length > 0 || outdated.length > 0,
-      missing,
-      outdated,
-    }
+    return { isValid, missing, outdated }
   }
 }
