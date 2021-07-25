@@ -10,6 +10,19 @@ import { EXAMPLE_SCHEMA_TS, EXPECTED_JSON_SCHEMA } from './test-fixtures.js'
 
 chai.use(dirtyChai)
 
+async function withTemporaryWorkingDirectory<Result>(
+  dir: string,
+  fn: () => Result
+): Promise<Result> {
+  const cwd = process.cwd()
+  process.chdir(dir)
+  try {
+    return await fn()
+  } finally {
+    process.chdir(cwd)
+  }
+}
+
 describe('Runner', () => {
   let dir: DirectoryResult
   beforeEach(async () => {
@@ -31,10 +44,19 @@ describe('Runner', () => {
     it('creates the expected JSON Schema file', async function () {
       this.timeout('5s')
 
-      const { generatedJsonSchemaRelativePaths } = await runner.update()
+      let generatedJsonSchemaRelativePaths
+      await withTemporaryWorkingDirectory(dir.path, async () => {
+        ;({ generatedJsonSchemaRelativePaths } = await runner.update())
+      })
+
       expect(generatedJsonSchemaRelativePaths).to.deep.equal([
         'example/generated/this.schema.json',
       ])
+
+      // Appease the compiler.
+      if (!generatedJsonSchemaRelativePaths) {
+        throw Error("Shouldn't get here")
+      }
 
       const generated = await loadJson(
         path.join(dir.path, generatedJsonSchemaRelativePaths[0])
@@ -55,7 +77,10 @@ describe('Runner', () => {
         ).to.be.true()
 
         // Act.
-        const { deletedSchemaPaths } = await runner.update()
+        let deletedSchemaPaths
+        await withTemporaryWorkingDirectory(dir.path, async () => {
+          ;({ deletedSchemaPaths } = await runner.update())
+        })
 
         // Assert.
         expect(deletedSchemaPaths).to.have.members([extraGeneratedSchema])

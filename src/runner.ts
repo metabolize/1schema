@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
 import chalk from 'chalk'
-import { promises as fs } from 'fs'
+import fs from 'fs'
 import lodash from 'lodash'
 import path from 'path'
 
@@ -27,6 +27,10 @@ export class Runner {
     return findSourceSchemas(this.basedir)
   }
 
+  get tsconfig(): string | undefined {
+    return fs.existsSync('tsconfig.json') ? 'tsconfig.json' : undefined
+  }
+
   private async prune({
     generatedJsonSchemaRelativePaths,
   }: {
@@ -37,7 +41,7 @@ export class Runner {
     const deletedSchemaPaths = []
     for (const foundSchema of await findGeneratedSchemas(this.basedir)) {
       if (!generatedJsonSchemaRelativePaths.includes(foundSchema)) {
-        await fs.unlink(path.join(basedir, foundSchema))
+        await fs.promises.unlink(path.join(basedir, foundSchema))
         deletedSchemaPaths.push(foundSchema)
         console.log(`${chalk.gray(foundSchema)} removed`)
       }
@@ -49,13 +53,14 @@ export class Runner {
     generatedJsonSchemaRelativePaths: string[]
     deletedSchemaPaths: string[]
   }> {
-    const { basedir } = this
+    const { basedir, tsconfig } = this
 
     const generatedJsonSchemaRelativePaths = []
     for (const schemaSourceRelativePath of await this.schemaSourceRelativePaths()) {
       const { generatedJsonSchemaRelativePath } = await updateSchema({
         basedir,
         schemaSourceRelativePath,
+        tsconfig,
       })
       generatedJsonSchemaRelativePaths.push(generatedJsonSchemaRelativePath)
       console.log(
@@ -81,7 +86,7 @@ export class Runner {
     missing: string[]
     outdated: string[]
   }> {
-    const { basedir } = this
+    const { basedir, tsconfig } = this
 
     const missing = []
     const outdated = []
@@ -96,7 +101,7 @@ export class Runner {
       )
       let contents
       try {
-        contents = await fs.readFile(generatedSchemaPath, 'utf-8')
+        contents = await fs.promises.readFile(generatedSchemaPath, 'utf-8')
       } catch (e) {
         missing.push(generatedJsonSchemaRelativePath)
         console.log(
@@ -122,6 +127,7 @@ export class Runner {
       const generated = await generateSchema({
         basedir,
         schemaSourceRelativePath,
+        tsconfig,
       })
 
       if (lodash.isEqual(parsed, generated)) {

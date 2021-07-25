@@ -9,12 +9,15 @@ import { createDirForTargetFile } from './fs.js'
 export function generateSchema({
   basedir,
   schemaSourceRelativePath,
+  tsconfig,
 }: {
   basedir: string
   schemaSourceRelativePath: string
+  tsconfig?: string
 }): Schema {
   return createGenerator({
     path: path.resolve(basedir, schemaSourceRelativePath),
+    tsconfig,
     expose: 'export',
     jsDoc: 'extended',
     topRef: true,
@@ -41,10 +44,12 @@ export async function updateSchema({
   basedir,
   schemaSourceRelativePath,
   generatedJsonSchemaRelativePath,
+  tsconfig,
 }: {
   basedir: string
   schemaSourceRelativePath: string
   generatedJsonSchemaRelativePath?: string
+  tsconfig?: string
 }): Promise<{ generatedJsonSchemaRelativePath: string }> {
   if (!generatedJsonSchemaRelativePath) {
     generatedJsonSchemaRelativePath = pathForGeneratedJsonSchema(
@@ -52,7 +57,11 @@ export async function updateSchema({
     )
   }
 
-  const generated = await generateSchema({ basedir, schemaSourceRelativePath })
+  const generated = await generateSchema({
+    basedir,
+    schemaSourceRelativePath,
+    tsconfig,
+  })
   const formatted = await format(generated, basedir)
 
   const dst = path.join(basedir, generatedJsonSchemaRelativePath)
