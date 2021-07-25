@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import tmp, { DirectoryResult } from 'tmp-promise'
 
-import { findSchemas } from './find-schemas.js'
+import { findSourceSchemas } from './find-schemas.js'
 import { touchFiles } from './fs-test-helpers.js'
 
 async function createExampleTree(paths: string[]): Promise<DirectoryResult> {
@@ -20,6 +20,6 @@ describe('findSchemas()', () => {
   afterEach(() => dir && dir.cleanup())
 
   it('finds the expected paths', async () => {
-    expect(await findSchemas(dir.path)).to.have.members(schemaPaths)
+    expect(await findSourceSchemas(dir.path)).to.have.members(schemaPaths)
   })
 })

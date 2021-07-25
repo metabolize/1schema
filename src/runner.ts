@@ -5,7 +5,7 @@ import { promises as fs } from 'fs'
 import lodash from 'lodash'
 import path from 'path'
 
-import { findSchemas } from './find-schemas.js'
+import { findGeneratedSchemas, findSourceSchemas } from './find-schemas.js'
 import {
   generateSchema,
   pathForGeneratedJsonSchema,
@@ -24,10 +24,31 @@ export class Runner {
   }
 
   schemaSourceRelativePaths(): Promise<string[]> {
-    return findSchemas(this.basedir)
+    return findSourceSchemas(this.basedir)
   }
 
-  async update(): Promise<{ generatedJsonSchemaRelativePaths: string[] }> {
+  private async prune({
+    generatedJsonSchemaRelativePaths,
+  }: {
+    generatedJsonSchemaRelativePaths: string[]
+  }): Promise<{ deletedSchemaPaths: string[] }> {
+    const { basedir } = this
+
+    const deletedSchemaPaths = []
+    for (const foundSchema of await findGeneratedSchemas(this.basedir)) {
+      if (!generatedJsonSchemaRelativePaths.includes(foundSchema)) {
+        await fs.unlink(path.join(basedir, foundSchema))
+        deletedSchemaPaths.push(foundSchema)
+        console.log(`${chalk.gray(foundSchema)} removed`)
+      }
+    }
+    return { deletedSchemaPaths }
+  }
+
+  async update(): Promise<{
+    generatedJsonSchemaRelativePaths: string[]
+    deletedSchemaPaths: string[]
+  }> {
     const { basedir } = this
 
     const generatedJsonSchemaRelativePaths = []
@@ -44,11 +65,15 @@ export class Runner {
       )
     }
 
+    const { deletedSchemaPaths } = await this.prune({
+      generatedJsonSchemaRelativePaths,
+    })
+
     if (generatedJsonSchemaRelativePaths.length === 0) {
       console.log(chalk.blue('No schema source files found'))
     }
 
-    return { generatedJsonSchemaRelativePaths }
+    return { generatedJsonSchemaRelativePaths, deletedSchemaPaths }
   }
 
   async check(): Promise<{

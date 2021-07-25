@@ -6,7 +6,7 @@
     "typescript",
     "jsonschema"
   ],
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
@@ -40,6 +40,7 @@
   "devDependencies": {
     "@types/argparse": "2.0.10",
     "@types/chai": "^4.2.21",
+    "@types/dirty-chai": "^2.0.2",
     "@types/js-yaml": "^4.0.2",
     "@types/lodash": "^4.14.171",
     "@types/mocha": "^9.0.0",
@@ -50,6 +51,7 @@
     "@typescript-eslint/parser": "^4.28.4",
     "chai": "^4.3.4",
     "del-cli": "^4.0.1",
+    "dirty-chai": "^2.0.1",
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
