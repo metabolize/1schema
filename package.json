@@ -19,11 +19,10 @@
     "predev": "del dist/",
     "dev": "tsc --watch",
     "check-types": "tsc --noEmit --project .",
-    "mocha": "mocha",
     "lint": "eslint \"**/*.ts\"",
     "prettier:check": "prettier --check \"**/*.@(ts|js|yml|md|json)\"",
     "prettier": "prettier --write \"**/*.@(ts|js|yml|md|json)\"",
-    "test": "run-p --continue-on-error check-types mocha lint prettier:check",
+    "test": "mocha",
     "prepare": "npm run build"
   },
   "files": [
