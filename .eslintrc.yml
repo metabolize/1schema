@@ -6,6 +6,9 @@ extends:
   - 'plugin:@typescript-eslint/recommended'
   - prettier
 
+plugins:
+  - simple-import-sort
+
 parser: '@typescript-eslint/parser'
 
 rules:
@@ -20,3 +23,6 @@ rules:
   no-var: 'error'
   prefer-const: 'error'
   no-console: 'error'
+
+  'simple-import-sort/imports': 'error'
+  'simple-import-sort/exports': 'error'

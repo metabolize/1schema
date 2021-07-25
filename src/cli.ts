@@ -6,8 +6,9 @@ import { ArgumentParser } from 'argparse'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import Manifest, { MatchResult } from './manifest.js'
+
 import Archive from './archive.js'
+import Manifest, { MatchResult } from './manifest.js'
 
 export default async function main(inArgs?: string[]): Promise<void> {
   const { description, version } = JSON.parse(

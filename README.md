@@ -67,7 +67,8 @@ contributions welcome!
 
 - Run `1schema update` to generate `generated/schema.json` with all exported
   types and their dependents. Check in this file.
-- At runtime, `import { validate } from '1schema'` and `validate(inputData)`.
+- COMING SOON: At runtime, `import { validate } from '1schema'` and
+  `validate(inputData)`.
 - If you're using TypeScript, cast the validated input to the appropriate type
   from your schema (e.g. `const contact = inputData as Contact`) to get
   compile-time checking.
