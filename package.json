@@ -31,12 +31,9 @@
   "repository": "metabolize/1schema",
   "dependencies": {
     "argparse": "^2.0.1",
-    "del": "^6.0.0",
     "globby": "^12.0.0",
-    "joi": "^17.4.1",
-    "js-yaml": "^4.1.0",
-    "multimatch": "^5.0.0",
-    "parse-gitignore": "^1.0.1"
+    "parse-gitignore": "^1.0.1",
+    "ts-json-schema-generator": "^0.95.0"
   },
   "devDependencies": {
     "@types/argparse": "2.0.10",
@@ -45,7 +42,9 @@
     "@types/js-yaml": "^4.0.2",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.4.2",
+    "@types/prettier": "^2.3.2",
     "@types/tmp": "^0.2.1",
+    "@types/wait-promise": "^0.4.0",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
     "@typescript-eslint/parser": "^4.28.4",
     "chai": "^4.3.4",
@@ -61,9 +60,11 @@
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2",
     "shebang-trim": "^1.1.0",
+    "snap-shot-it": "^7.9.6",
     "tmp-promise": "^3.0.2",
     "ts-node": "^10.1.0",
-    "typescript": "4.3.5"
+    "typescript": "4.3.5",
+    "wait-promise": "^0.4.1"
   },
   "engines": {
     "node": ">= 12.x"
