@@ -1,0 +1,85 @@
+{
+  "name": "1schema",
+  "description": "One schema to rule them all",
+  "keywords": [
+    "schema",
+    "typescript",
+    "jsonschema"
+  ],
+  "version": "0.1.0",
+  "license": "MIT",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": "dist/cli.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prebuild": "del dist/",
+    "build": "tsc",
+    "postbuild": "shebang-trim dist/cli.js",
+    "predev": "del dist/",
+    "dev": "tsc --watch",
+    "check-types": "tsc --noEmit --project .",
+    "mocha": "mocha",
+    "lint": "eslint \"**/*.ts\"",
+    "prettier:check": "prettier --check \"**/*.@(ts|js|yml|md|json)\"",
+    "prettier": "prettier --write \"**/*.@(ts|js|yml|md|json)\"",
+    "test": "run-p --continue-on-error check-types mocha lint prettier:check",
+    "prepare": "npm run build"
+  },
+  "files": [
+    "dist/**/*.@(js|ts|map)"
+  ],
+  "repository": "metabolize/1schema",
+  "dependencies": {
+    "argparse": "^2.0.1",
+    "del": "^6.0.0",
+    "globby": "^12.0.0",
+    "joi": "^17.4.1",
+    "js-yaml": "^4.1.0",
+    "multimatch": "^5.0.0",
+    "parse-gitignore": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/argparse": "2.0.10",
+    "@types/chai": "^4.2.21",
+    "@types/fs-readfile-promise": "^3.0.1",
+    "@types/js-yaml": "^4.0.2",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.4.2",
+    "@types/tmp": "^0.2.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
+    "chai": "^4.3.4",
+    "del-cli": "^4.0.1",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "mocha": "^9.0.2",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.3.2",
+    "shebang-trim": "^1.1.0",
+    "tmp-promise": "^3.0.2",
+    "ts-node": "^10.1.0",
+    "typescript": "4.3.5"
+  },
+  "engines": {
+    "node": ">= 12.x"
+  },
+  "mocha": {
+    "extension": [
+      "ts"
+    ],
+    "spec": "src/**/*.spec.ts",
+    "loader": "ts-node/esm"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "arrowParens": "avoid"
+  }
+}
