@@ -1,5 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
+import stringify from 'json-stable-stringify'
 import prettier from 'prettier'
 import { createGenerator, Schema } from 'ts-json-schema-generator'
 
@@ -31,8 +32,9 @@ export function pathForGeneratedJsonSchema(
 }
 
 export function format(schema: Schema, basedir: string): string {
-  const options = prettier.resolveConfig(basedir)
-  return prettier.format(JSON.stringify(schema), { parser: 'json', ...options })
+  const stringified = stringify(schema, { space: 2 })
+  const prettierOptions = prettier.resolveConfig(basedir)
+  return prettier.format(stringified, { parser: 'json', ...prettierOptions })
 }
 
 export async function updateSchema({
