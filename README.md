@@ -28,6 +28,16 @@ contributions welcome!
 [python-jsonschema]: https://python-jsonschema.readthedocs.io/en/stable/validate/
 [blog post]: https://levelup.gitconnected.com/how-we-use-our-typescript-type-information-at-runtime-6e95b801cfeb
 
+## Why not use ts-json-schema-generator directly?
+
+You can! However, to provide a smooth development experience, 1schema provides a
+few niceties:
+
+1. Globbing
+2. Formatting
+3. Checking that the schema are up to date
+4. Pruning JSON schemas when their corresponding source files are removed
+
 ## How it works
 
 - In your project, create a `schema.ts` file:
