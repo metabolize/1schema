@@ -31,12 +31,12 @@
   "repository": "metabolize/1schema",
   "dependencies": {
     "argparse": "^2.0.1",
-    "chalk": "^4.1.1",
-    "globby": "^12.0.0",
+    "chalk": "^4.1.2",
+    "globby": "^12.0.2",
     "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.21",
-    "prettier": "^2.3.2",
-    "ts-json-schema-generator": "^0.95.0"
+    "prettier": "^2.4.1",
+    "ts-json-schema-generator": "^0.97.0"
   },
   "devDependencies": {
     "@types/argparse": "2.0.10",
@@ -49,7 +49,7 @@
     "@types/node": "^16.11.7",
     "@types/tmp": "^0.2.2",
     "@typescript-eslint/eslint-plugin": "^5.3.1",
-    "@types/prettier": "^2.3.2",
+    "@types/prettier": "^2.4.2",
     "@typescript-eslint/parser": "^5.3.1",
     "chai": "^4.3.4",
     "del-cli": "^4.0.1",
