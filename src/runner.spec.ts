@@ -127,12 +127,31 @@ describe('Runner', () => {
       )
 
       it('the expected error is thrown', async () => {
-        expect(
+        await expect(
           harness.withTemporaryWorkingDirectory(() => harness.runner.update())
-        ).to.eventually.throw(
+        ).to.be.rejectedWith(
           Error,
           "Cannot find module 'nonexistent' or its corresponding type declarations"
         )
+      })
+    })
+  })
+
+  describe('`check()`', function () {
+    context('when an extra generated schema file is present', () => {
+      const extraGeneratedSchema = 'foobar/generated/schema.json'
+      beforeEach(() => harness.writeFile(extraGeneratedSchema, ''))
+
+      it('throws an error', async function () {
+        // Confidence check.
+        expect(harness.existsSync(extraGeneratedSchema)).to.be.true()
+
+        // Act.
+        expect(
+          await harness.withTemporaryWorkingDirectory(() =>
+            harness.runner.check()
+          )
+        ).to.deep.contain({ spurious: [extraGeneratedSchema], isValid: false })
       })
     })
   })
