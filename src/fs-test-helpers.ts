@@ -22,3 +22,16 @@ export async function loadJson(path: string): Promise<JsonValue> {
   const contents = await fs.readFile(path, 'utf-8')
   return JSON.parse(contents)
 }
+
+export async function withTemporaryWorkingDirectory<Result>(
+  dir: string,
+  fn: () => Result
+): Promise<Result> {
+  const cwd = process.cwd()
+  process.chdir(dir)
+  try {
+    return await fn()
+  } finally {
+    process.chdir(cwd)
+  }
+}

@@ -1,53 +1,89 @@
 import chai, { expect } from 'chai'
 import dirtyChai from 'dirty-chai'
+import chaiAsPromised from 'chai-as-promised'
 import fs from 'fs'
 import path from 'path'
-import tmp, { DirectoryResult } from 'tmp-promise'
+import tmp from 'tmp-promise'
+import { JsonValue } from 'type-fest'
 
-import { loadJson, writeFile } from './fs-test-helpers.js'
+import {
+  loadJson,
+  withTemporaryWorkingDirectory,
+  writeFile,
+} from './fs-test-helpers.js'
 import { Runner } from './runner.js'
-import { EXAMPLE_SCHEMA_TS, EXPECTED_JSON_SCHEMA } from './test-fixtures.js'
+import {
+  ERROR_SCHEMA_TS,
+  EXAMPLE_SCHEMA_TS,
+  EXPECTED_JSON_SCHEMA,
+} from './test-fixtures.js'
 
+chai.use(chaiAsPromised)
 chai.use(dirtyChai)
 
-async function withTemporaryWorkingDirectory<Result>(
-  dir: string,
-  fn: () => Result
-): Promise<Result> {
-  const cwd = process.cwd()
-  process.chdir(dir)
-  try {
-    return await fn()
-  } finally {
-    process.chdir(cwd)
+class TestHarness {
+  dir: tmp.DirectoryResult
+  runner: Runner
+
+  constructor({ dir }: { dir: tmp.DirectoryResult }) {
+    this.dir = dir
+    this.runner = new Runner({ basedir: dir.path })
+  }
+
+  static async create(): Promise<TestHarness> {
+    const dir = await tmp.dir({ unsafeCleanup: true })
+    return new TestHarness({ dir })
+  }
+
+  join(relativePath: string): string {
+    return path.join(this.dir.path, relativePath)
+  }
+
+  async writeFile(relativePath: string, contents: string): Promise<void> {
+    return writeFile(this.join(relativePath), contents)
+  }
+
+  async loadJson(relativePath: string): Promise<JsonValue> {
+    return loadJson(this.join(relativePath))
+  }
+
+  existsSync(relativePath: string): boolean {
+    return fs.existsSync(this.join(relativePath))
+  }
+
+  async withTemporaryWorkingDirectory<Result>(
+    fn: () => Result
+  ): Promise<Result> {
+    return withTemporaryWorkingDirectory(this.dir.path, fn)
+  }
+
+  async cleanup(): Promise<void> {
+    if (this.dir) {
+      await this.dir.cleanup()
+    }
   }
 }
 
 describe('Runner', () => {
-  let dir: DirectoryResult
+  let harness: TestHarness
   beforeEach(async () => {
-    dir = await tmp.dir({ unsafeCleanup: true })
+    harness = await TestHarness.create()
   })
-  afterEach(() => dir && dir.cleanup())
+  afterEach(() => harness.cleanup())
 
   const schemaSourceRelativePath = 'example/this.schema.ts'
   beforeEach(() =>
-    writeFile(path.join(dir.path, schemaSourceRelativePath), EXAMPLE_SCHEMA_TS)
+    harness.writeFile(schemaSourceRelativePath, EXAMPLE_SCHEMA_TS)
   )
 
-  let runner: Runner
-  beforeEach(() => {
-    runner = new Runner({ basedir: dir.path })
-  })
+  describe('`update()`', function () {
+    this.timeout('5s')
 
-  describe('`update()`', () => {
     it('creates the expected JSON Schema file', async function () {
-      this.timeout('5s')
-
-      let generatedJsonSchemaRelativePaths
-      await withTemporaryWorkingDirectory(dir.path, async () => {
-        ;({ generatedJsonSchemaRelativePaths } = await runner.update())
-      })
+      const { generatedJsonSchemaRelativePaths } =
+        await harness.withTemporaryWorkingDirectory(() =>
+          harness.runner.update()
+        )
 
       expect(generatedJsonSchemaRelativePaths).to.deep.equal([
         'example/generated/this.schema.json',
@@ -58,35 +94,45 @@ describe('Runner', () => {
         throw Error("Shouldn't get here")
       }
 
-      const generated = await loadJson(
-        path.join(dir.path, generatedJsonSchemaRelativePaths[0])
+      const generated = await harness.loadJson(
+        generatedJsonSchemaRelativePaths[0]
       )
       expect(generated).to.deep.equal(EXPECTED_JSON_SCHEMA)
     })
 
     context('when an extra generated schema file is present', () => {
       const extraGeneratedSchema = 'foobar/generated/schema.json'
-      beforeEach(() => writeFile(path.join(dir.path, extraGeneratedSchema)))
+      beforeEach(() => harness.writeFile(extraGeneratedSchema, ''))
 
       it('removes it', async function () {
-        this.timeout('5s')
-
         // Confidence check.
-        expect(
-          await fs.existsSync(path.join(dir.path, extraGeneratedSchema))
-        ).to.be.true()
+        expect(harness.existsSync(extraGeneratedSchema)).to.be.true()
 
         // Act.
-        let deletedSchemaPaths
-        await withTemporaryWorkingDirectory(dir.path, async () => {
-          ;({ deletedSchemaPaths } = await runner.update())
-        })
+        const { deletedSchemaPaths } =
+          await harness.withTemporaryWorkingDirectory(() =>
+            harness.runner.update()
+          )
 
         // Assert.
         expect(deletedSchemaPaths).to.have.members([extraGeneratedSchema])
+        expect(harness.existsSync(extraGeneratedSchema)).to.be.false()
+      })
+    })
+
+    context('when an error occurs', () => {
+      const errorSchemaSourceRelativePath = 'example/error.schema.ts'
+      beforeEach(() =>
+        harness.writeFile(errorSchemaSourceRelativePath, ERROR_SCHEMA_TS)
+      )
+
+      it('the expected error is thrown', async () => {
         expect(
-          await fs.existsSync(path.join(dir.path, extraGeneratedSchema))
-        ).to.be.false()
+          harness.withTemporaryWorkingDirectory(() => harness.runner.update())
+        ).to.eventually.throw(
+          Error,
+          "Cannot find module 'nonexistent' or its corresponding type declarations"
+        )
       })
     })
   })
