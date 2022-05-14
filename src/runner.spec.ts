@@ -1,6 +1,6 @@
 import chai, { expect } from 'chai'
-import dirtyChai from 'dirty-chai'
 import chaiAsPromised from 'chai-as-promised'
+import dirtyChai from 'dirty-chai'
 import fs from 'fs'
 import path from 'path'
 import tmp from 'tmp-promise'
