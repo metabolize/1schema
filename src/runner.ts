@@ -32,6 +32,16 @@ export class Runner {
     return fs.existsSync('tsconfig.json') ? 'tsconfig.json' : undefined
   }
 
+  private async findSpuriousSchemas({
+    generatedJsonSchemaRelativePaths,
+  }: {
+    generatedJsonSchemaRelativePaths: string[]
+  }): Promise<string[]> {
+    return (await findGeneratedSchemas(this.basedir)).filter(
+      foundSchema => !generatedJsonSchemaRelativePaths.includes(foundSchema)
+    )
+  }
+
   private async prune({
     generatedJsonSchemaRelativePaths,
   }: {
@@ -40,12 +50,12 @@ export class Runner {
     const { basedir } = this
 
     const deletedSchemaPaths = []
-    for (const foundSchema of await findGeneratedSchemas(this.basedir)) {
-      if (!generatedJsonSchemaRelativePaths.includes(foundSchema)) {
-        await fs.promises.unlink(path.join(basedir, foundSchema))
-        deletedSchemaPaths.push(foundSchema)
-        console.log(`${chalk.gray(foundSchema)} removed`)
-      }
+    for (const foundSchema of await this.findSpuriousSchemas({
+      generatedJsonSchemaRelativePaths,
+    })) {
+      await fs.promises.unlink(path.join(basedir, foundSchema))
+      deletedSchemaPaths.push(foundSchema)
+      console.log(`${chalk.gray(foundSchema)} removed`)
     }
     return { deletedSchemaPaths }
   }
@@ -74,9 +84,7 @@ export class Runner {
         )
       } catch (e) {
         console.log(
-          `${BOOM} ${chalk.redBright('Error in')} ${chalk.red(
-            schemaSourceRelativePath
-          )}`
+          `${BOOM} ${chalk.redBright(schemaSourceRelativePath)} errored`
         )
         throw e
       }
@@ -97,16 +105,20 @@ export class Runner {
     isValid: boolean
     missing: string[]
     outdated: string[]
+    spurious: string[]
   }> {
     const { basedir, tsconfig } = this
 
     const missing = []
     const outdated = []
     const schemaSourceRelativePaths = await this.schemaSourceRelativePaths()
+    const generatedJsonSchemaRelativePaths = []
     for (const schemaSourceRelativePath of schemaSourceRelativePaths) {
       const generatedJsonSchemaRelativePath = pathForGeneratedJsonSchema(
         schemaSourceRelativePath
       )
+      generatedJsonSchemaRelativePaths.push(generatedJsonSchemaRelativePath)
+
       const generatedSchemaPath = path.join(
         this.basedir,
         generatedJsonSchemaRelativePath
@@ -156,7 +168,19 @@ export class Runner {
       }
     }
 
-    const isValid = missing.length === 0 && outdated.length === 0
+    const spurious = await this.findSpuriousSchemas({
+      generatedJsonSchemaRelativePaths,
+    })
+    for (const spuriousSchema of spurious) {
+      console.log(
+        `${chalk.red(X)} ${chalk.redBright(
+          spuriousSchema
+        )} should not be present`
+      )
+    }
+
+    const isValid =
+      missing.length === 0 && outdated.length === 0 && spurious.length === 0
 
     if (schemaSourceRelativePaths.length === 0) {
       console.log(chalk.blue('No schema source files found'))
@@ -164,6 +188,6 @@ export class Runner {
       console.log(chalk.blue('All schemas up to date'))
     }
 
-    return { isValid, missing, outdated }
+    return { isValid, missing, outdated, spurious }
   }
 }
