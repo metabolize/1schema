@@ -52,6 +52,7 @@
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
     "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
     "del-cli": "^4.0.1",
     "dirty-chai": "^2.0.1",
     "eslint": "^8.15.0",

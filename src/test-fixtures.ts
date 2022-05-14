@@ -42,3 +42,7 @@ export const EXPECTED_JSON_SCHEMA = {
     },
   },
 }
+
+export const ERROR_SCHEMA_TS = `
+import { Foo } from 'nonexistent'
+`

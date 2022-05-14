@@ -15,6 +15,7 @@ import {
 const RIGHT_ARROW = '\u27A1'
 const CHECK = '\u2714'
 const X = '\u2717'
+const BOOM = '\uD83D\uDCA5'
 
 export class Runner {
   readonly basedir: string
@@ -57,17 +58,28 @@ export class Runner {
 
     const generatedJsonSchemaRelativePaths = []
     for (const schemaSourceRelativePath of await this.schemaSourceRelativePaths()) {
-      const { generatedJsonSchemaRelativePath } = await updateSchema({
-        basedir,
-        schemaSourceRelativePath,
-        tsconfig,
-      })
-      generatedJsonSchemaRelativePaths.push(generatedJsonSchemaRelativePath)
-      console.log(
-        `${chalk.cyan(
-          schemaSourceRelativePath
-        )} ${RIGHT_ARROW} ${chalk.greenBright(generatedJsonSchemaRelativePath)}`
-      )
+      try {
+        const { generatedJsonSchemaRelativePath } = await updateSchema({
+          basedir,
+          schemaSourceRelativePath,
+          tsconfig,
+        })
+        generatedJsonSchemaRelativePaths.push(generatedJsonSchemaRelativePath)
+        console.log(
+          `${chalk.cyan(
+            schemaSourceRelativePath
+          )} ${RIGHT_ARROW} ${chalk.greenBright(
+            generatedJsonSchemaRelativePath
+          )}`
+        )
+      } catch (e) {
+        console.log(
+          `${BOOM} ${chalk.redBright('Error in')} ${chalk.red(
+            schemaSourceRelativePath
+          )}`
+        )
+        throw e
+      }
     }
 
     const { deletedSchemaPaths } = await this.prune({
