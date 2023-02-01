@@ -45,7 +45,7 @@
     "@types/js-yaml": "^4.0.5",
     "@types/json-stable-stringify": "^1.0.34",
     "@types/lodash": "^4.14.182",
-    "@types/mocha": "^9.1.1",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.6.3",
     "@types/tmp": "^0.2.3",
