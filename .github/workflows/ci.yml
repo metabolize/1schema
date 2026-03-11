@@ -32,13 +32,17 @@ jobs:
       - run: npm run lint
 
   test:
+    name: Test - Node ${{ matrix.node-version }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12, 22, 24]
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm ci
       - run: npm test
