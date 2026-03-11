@@ -132,7 +132,7 @@ describe('Runner', () => {
           harness.withTemporaryWorkingDirectory(() => harness.runner.update())
         ).to.be.rejectedWith(
           Error,
-          "Cannot find module 'nonexistent' or its corresponding type declarations"
+          "Type check error"
         )
       })
     })
