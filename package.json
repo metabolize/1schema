@@ -21,7 +21,7 @@
     "check-types": "tsc --noEmit --project .",
     "lint": "eslint \"**/*.ts\"",
     "format:check": "prettier --check \"**/*.@(ts|js|yml|md|json)\"",
-    "format": "prettier --write \"**/*.@(ts|js|yml|md|json)\"",
+    "format:fix": "prettier --write \"**/*.@(ts|js|yml|md|json)\"",
     "test": "mocha",
     "prepare": "npm run build"
   },
