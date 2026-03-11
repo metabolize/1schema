@@ -1,4 +1,5 @@
-import chai, { expect } from 'chai'
+import * as chai from 'chai'
+import { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import dirtyChai from 'dirty-chai'
 import fs from 'fs'
