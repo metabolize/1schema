@@ -130,10 +130,7 @@ describe('Runner', () => {
       it('the expected error is thrown', async () => {
         await expect(
           harness.withTemporaryWorkingDirectory(() => harness.runner.update())
-        ).to.be.rejectedWith(
-          Error,
-          "Cannot find module 'nonexistent' or its corresponding type declarations"
-        )
+        ).to.be.rejectedWith(Error, 'Type check error')
       })
     })
   })

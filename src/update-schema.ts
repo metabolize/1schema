@@ -34,9 +34,9 @@ export function pathForGeneratedJsonSchema(
   )
 }
 
-export function format(schema: Schema, basedir: string): string {
-  const stringified = stringify(schema, { space: 2 })
-  const prettierOptions = prettier.resolveConfig(basedir)
+export async function format(schema: Schema, basedir: string): Promise<string> {
+  const stringified = stringify(schema, { space: 2 }) || ''
+  const prettierOptions = await prettier.resolveConfig(basedir)
   return prettier.format(stringified, { parser: 'json', ...prettierOptions })
 }
 
