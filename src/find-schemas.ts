@@ -8,7 +8,7 @@ export async function findSourceSchemas(basedir?: string): Promise<string[]> {
 }
 
 export async function findGeneratedSchemas(
-  basedir?: string
+  basedir?: string,
 ): Promise<string[]> {
   return globby(['**/generated/schema.json', '**/generated/*.schema.json'], {
     cwd: basedir,

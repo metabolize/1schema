@@ -25,17 +25,17 @@ export function generateSchema({
 }
 
 export function pathForGeneratedJsonSchema(
-  schemaSourceRelativePath: string
+  schemaSourceRelativePath: string,
 ): string {
   return path.join(
     path.dirname(schemaSourceRelativePath),
     'generated',
-    path.basename(schemaSourceRelativePath).replace(/\.ts$/, '.json')
+    path.basename(schemaSourceRelativePath).replace(/\.ts$/, '.json'),
   )
 }
 
 export async function format(schema: Schema, basedir: string): Promise<string> {
-  const stringified = stringify(schema, { space: 2 }) || ""
+  const stringified = stringify(schema, { space: 2 }) || ''
   const prettierOptions = await prettier.resolveConfig(basedir)
   return prettier.format(stringified, { parser: 'json', ...prettierOptions })
 }
@@ -53,7 +53,7 @@ export async function updateSchema({
 }): Promise<{ generatedJsonSchemaRelativePath: string }> {
   if (!generatedJsonSchemaRelativePath) {
     generatedJsonSchemaRelativePath = pathForGeneratedJsonSchema(
-      schemaSourceRelativePath
+      schemaSourceRelativePath,
     )
   }
 

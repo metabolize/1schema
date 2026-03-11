@@ -16,7 +16,7 @@ describe('updateSchema()', () => {
 
   const schemaSourceRelativePath = 'example/this.schema.ts'
   beforeEach(() =>
-    writeFile(path.join(dir.path, schemaSourceRelativePath), EXAMPLE_SCHEMA_TS)
+    writeFile(path.join(dir.path, schemaSourceRelativePath), EXAMPLE_SCHEMA_TS),
   )
 
   it('creates the expected JSON Schema file', async function () {
@@ -27,10 +27,10 @@ describe('updateSchema()', () => {
       schemaSourceRelativePath,
     })
     expect(generatedJsonSchemaRelativePath).to.equal(
-      'example/generated/this.schema.json'
+      'example/generated/this.schema.json',
     )
     const generated = await loadJson(
-      path.join(dir.path, generatedJsonSchemaRelativePath)
+      path.join(dir.path, generatedJsonSchemaRelativePath),
     )
     expect(generated).to.deep.equal(EXPECTED_JSON_SCHEMA)
   })
