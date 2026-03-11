@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0
+
+- BREAKING CHANGE: Require Node 20+.
+- Update dependencies including ts-json-schema-generator.
+
 ## 0.2.0
 
 - `1schema check`: throw an error when spurious schemas are present.
