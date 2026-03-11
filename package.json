@@ -71,7 +71,7 @@
     "typescript": "5.0.4"
   },
   "engines": {
-    "node": ">= 12.x"
+    "node": ">= 18.x"
   },
   "mocha": {
     "extension": [
