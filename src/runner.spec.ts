@@ -53,7 +53,7 @@ class TestHarness {
   }
 
   async withTemporaryWorkingDirectory<Result>(
-    fn: () => Result,
+    fn: () => Result
   ): Promise<Result> {
     return withTemporaryWorkingDirectory(this.dir.path, fn)
   }
@@ -74,7 +74,7 @@ describe('Runner', () => {
 
   const schemaSourceRelativePath = 'example/this.schema.ts'
   beforeEach(() =>
-    harness.writeFile(schemaSourceRelativePath, EXAMPLE_SCHEMA_TS),
+    harness.writeFile(schemaSourceRelativePath, EXAMPLE_SCHEMA_TS)
   )
 
   describe('`update()`', function () {
@@ -83,7 +83,7 @@ describe('Runner', () => {
     it('creates the expected JSON Schema file', async function () {
       const { generatedJsonSchemaRelativePaths } =
         await harness.withTemporaryWorkingDirectory(() =>
-          harness.runner.update(),
+          harness.runner.update()
         )
 
       expect(generatedJsonSchemaRelativePaths).to.deep.equal([
@@ -96,7 +96,7 @@ describe('Runner', () => {
       }
 
       const generated = await harness.loadJson(
-        generatedJsonSchemaRelativePaths[0],
+        generatedJsonSchemaRelativePaths[0]
       )
       expect(generated).to.deep.equal(EXPECTED_JSON_SCHEMA)
     })
@@ -112,7 +112,7 @@ describe('Runner', () => {
         // Act.
         const { deletedSchemaPaths } =
           await harness.withTemporaryWorkingDirectory(() =>
-            harness.runner.update(),
+            harness.runner.update()
           )
 
         // Assert.
@@ -124,15 +124,15 @@ describe('Runner', () => {
     context('when an error occurs', () => {
       const errorSchemaSourceRelativePath = 'example/error.schema.ts'
       beforeEach(() =>
-        harness.writeFile(errorSchemaSourceRelativePath, ERROR_SCHEMA_TS),
+        harness.writeFile(errorSchemaSourceRelativePath, ERROR_SCHEMA_TS)
       )
 
       it('the expected error is thrown', async () => {
         await expect(
-          harness.withTemporaryWorkingDirectory(() => harness.runner.update()),
+          harness.withTemporaryWorkingDirectory(() => harness.runner.update())
         ).to.be.rejectedWith(
           Error,
-          "Cannot find module 'nonexistent' or its corresponding type declarations",
+          "Cannot find module 'nonexistent' or its corresponding type declarations"
         )
       })
     })
@@ -150,8 +150,8 @@ describe('Runner', () => {
         // Act.
         expect(
           await harness.withTemporaryWorkingDirectory(() =>
-            harness.runner.check(),
-          ),
+            harness.runner.check()
+          )
         ).to.deep.contain({ spurious: [extraGeneratedSchema], isValid: false })
       })
     })

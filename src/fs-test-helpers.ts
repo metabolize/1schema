@@ -11,7 +11,7 @@ export async function writeFile(dst: string, contents = ''): Promise<void> {
 
 export async function touchFiles(
   paths: string[],
-  directory: string,
+  directory: string
 ): Promise<void> {
   for (const examplePath of paths) {
     await writeFile(path.join(directory, examplePath))
@@ -25,7 +25,7 @@ export async function loadJson(path: string): Promise<JsonValue> {
 
 export async function withTemporaryWorkingDirectory<Result>(
   dir: string,
-  fn: () => Result,
+  fn: () => Result
 ): Promise<Result> {
   const cwd = process.cwd()
   process.chdir(dir)

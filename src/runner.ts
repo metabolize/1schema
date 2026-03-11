@@ -38,7 +38,7 @@ export class Runner {
     generatedJsonSchemaRelativePaths: string[]
   }): Promise<string[]> {
     return (await findGeneratedSchemas(this.basedir)).filter(
-      foundSchema => !generatedJsonSchemaRelativePaths.includes(foundSchema),
+      foundSchema => !generatedJsonSchemaRelativePaths.includes(foundSchema)
     )
   }
 
@@ -77,14 +77,14 @@ export class Runner {
         generatedJsonSchemaRelativePaths.push(generatedJsonSchemaRelativePath)
         console.log(
           `${chalk.cyan(
-            schemaSourceRelativePath,
+            schemaSourceRelativePath
           )} ${RIGHT_ARROW} ${chalk.greenBright(
-            generatedJsonSchemaRelativePath,
-          )}`,
+            generatedJsonSchemaRelativePath
+          )}`
         )
       } catch (e) {
         console.log(
-          `${BOOM} ${chalk.redBright(schemaSourceRelativePath)} errored`,
+          `${BOOM} ${chalk.redBright(schemaSourceRelativePath)} errored`
         )
         throw e
       }
@@ -115,13 +115,13 @@ export class Runner {
     const generatedJsonSchemaRelativePaths = []
     for (const schemaSourceRelativePath of schemaSourceRelativePaths) {
       const generatedJsonSchemaRelativePath = pathForGeneratedJsonSchema(
-        schemaSourceRelativePath,
+        schemaSourceRelativePath
       )
       generatedJsonSchemaRelativePaths.push(generatedJsonSchemaRelativePath)
 
       const generatedSchemaPath = path.join(
         this.basedir,
-        generatedJsonSchemaRelativePath,
+        generatedJsonSchemaRelativePath
       )
       let contents
       try {
@@ -130,8 +130,8 @@ export class Runner {
         missing.push(generatedJsonSchemaRelativePath)
         console.log(
           `${chalk.red(X)} ${chalk.redBright(
-            generatedJsonSchemaRelativePath,
-          )} is missing`,
+            generatedJsonSchemaRelativePath
+          )} is missing`
         )
         continue
       }
@@ -143,8 +143,8 @@ export class Runner {
         outdated.push(generatedJsonSchemaRelativePath)
         console.log(
           `${chalk.red(X)} ${chalk.redBright(
-            generatedJsonSchemaRelativePath,
-          )} could not be parsed`,
+            generatedJsonSchemaRelativePath
+          )} could not be parsed`
         )
       }
 
@@ -156,14 +156,14 @@ export class Runner {
 
       if (lodash.isEqual(parsed, generated)) {
         console.log(
-          `${CHECK} ${chalk.greenBright(generatedJsonSchemaRelativePath)}`,
+          `${CHECK} ${chalk.greenBright(generatedJsonSchemaRelativePath)}`
         )
       } else {
         outdated.push(generatedJsonSchemaRelativePath)
         console.log(
           `${chalk.red(X)} ${chalk.redBright(
-            generatedJsonSchemaRelativePath,
-          )} is out of date`,
+            generatedJsonSchemaRelativePath
+          )} is out of date`
         )
       }
     }
@@ -174,8 +174,8 @@ export class Runner {
     for (const spuriousSchema of spurious) {
       console.log(
         `${chalk.red(X)} ${chalk.redBright(
-          spuriousSchema,
-        )} should not be present`,
+          spuriousSchema
+        )} should not be present`
       )
     }
 

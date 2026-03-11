@@ -25,12 +25,12 @@ export function generateSchema({
 }
 
 export function pathForGeneratedJsonSchema(
-  schemaSourceRelativePath: string,
+  schemaSourceRelativePath: string
 ): string {
   return path.join(
     path.dirname(schemaSourceRelativePath),
     'generated',
-    path.basename(schemaSourceRelativePath).replace(/\.ts$/, '.json'),
+    path.basename(schemaSourceRelativePath).replace(/\.ts$/, '.json')
   )
 }
 
@@ -53,7 +53,7 @@ export async function updateSchema({
 }): Promise<{ generatedJsonSchemaRelativePath: string }> {
   if (!generatedJsonSchemaRelativePath) {
     generatedJsonSchemaRelativePath = pathForGeneratedJsonSchema(
-      schemaSourceRelativePath,
+      schemaSourceRelativePath
     )
   }
 

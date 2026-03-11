@@ -15,10 +15,10 @@ export default async function main(inArgs?: string[]): Promise<void> {
       path.join(
         path.dirname(fileURLToPath(import.meta.url)),
         '..',
-        'package.json',
+        'package.json'
       ),
-      'utf-8',
-    ),
+      'utf-8'
+    )
   )
 
   const parser = new ArgumentParser({ prog: name, description })
