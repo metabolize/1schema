@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import path from 'path'
-import tmp, { DirectoryResult } from 'tmp-promise'
+import type { DirectoryResult } from 'tmp-promise'
+import tmp from 'tmp-promise'
 
 import { loadJson, writeFile } from './fs-test-helpers.js'
 import { EXAMPLE_SCHEMA_TS, EXPECTED_JSON_SCHEMA } from './test-fixtures.js'

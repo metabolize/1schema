@@ -1,5 +1,6 @@
 import { expect } from 'chai'
-import tmp, { DirectoryResult } from 'tmp-promise'
+import type { DirectoryResult } from 'tmp-promise'
+import tmp from 'tmp-promise'
 
 import { findSourceSchemas } from './find-schemas.js'
 import { touchFiles } from './fs-test-helpers.js'
