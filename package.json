@@ -60,7 +60,7 @@
     "eslint-plugin-n": "15.6.1",
     "eslint-plugin-node": "11.1.0",
     "eslint-plugin-promise": "6.1.1",
-    "eslint-plugin-simple-import-sort": "8.0.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
     "mocha": "11.7.5",
     "shebang-trim": "1.2.0",
     "tmp-promise": "3.0.3",
